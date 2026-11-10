@@ -7,7 +7,7 @@ import (
 
 	"github.com/WaveSilent/golang-todoapp/internal/core/domain"
 	core_errors "github.com/WaveSilent/golang-todoapp/internal/core/errors"
-	"github.com/jackc/pgx/v5"
+	core_postgres_pool "github.com/WaveSilent/golang-todoapp/internal/core/repository/postgres/pool"
 )
 
 func (r *UsersRepository) PatchUser(
@@ -25,7 +25,7 @@ func (r *UsersRepository) PatchUser(
 		full_name=$1,
 		phone_number=$2
 	WHERE id=$3 AND version=$4
-	RETURNING id, version, full_name, phone_number
+	RETURNING id, version, full_name, phone_number;
 	`
 
 	row := r.pool.QueryRow(
@@ -46,9 +46,9 @@ func (r *UsersRepository) PatchUser(
 	)
 
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, core_postgres_pool.ErrNoRows) {
 			return domain.User{}, fmt.Errorf(
-				"user woth id='%d' concurrently accessed: %w",
+				"user with id='%d' concurrently accessed: %w",
 				id,
 				core_errors.ErrConflict,
 			)
