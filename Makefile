@@ -14,7 +14,7 @@ env-cleanup:
 	if [ "$$ans" = "y" ]; then \
 		docker compose down todoapp-postgres port-forwarder && \
 		sudo rm -rf "${PROJECT_ROOT}/out/pgdata" && \
-		echo "Файлы окружени очищены"; \
+		echo "Файлы окружения очищены"; \
 	else \
 		echo "Очистка окружения отменена"; \
 	fi
